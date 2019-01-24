@@ -3,6 +3,7 @@
 
 
 1 设备要求
+
 1.1 操作系统
 •	本地 - Windows 10
 •	虚拟机 - Ubuntu 16.04 
@@ -13,6 +14,7 @@
 
 
 2 本地文件系统的环境部署
+
 2.1 创建组及用户
 •	切换为 root 用户：
 `$ su root`
@@ -81,6 +83,7 @@ $ chmod 0600 ~/.ssh/authorized_keys
 ```
 
 3 单机模式的配置和运行
+
 3.1 下载 hadoop 2.7.7 版
 •	用 wget 命令下载 Hadoop 的镜像文件并解压缩：
 ```
@@ -118,6 +121,7 @@ $ cat output/*
 
 
 4 伪分布式的配置和运行
+
 4.1 属性配置
 •	修改 $HADOOP_HOME/etc/hadoop 目录下的 core-site.xml 文件：
 ```
@@ -191,6 +195,7 @@ $ cat output/*
 
 
 5 YARN模式的配置和运行
+
 5.1 属性配置
 •	将 $HADOOP_HOME/etc/hadoop/ 下的 mapred-site.xml.template 复制粘贴到 mapred-site.xml：
 ```
@@ -301,6 +306,7 @@ $ cp mapred-site.xml.template mapred-site.xml
 
 
 6 完全分布式的配置和运行
+
 6.1 集群的环境部署
 • 在每台子机上重复上述第 3 节中的五个步骤
 
