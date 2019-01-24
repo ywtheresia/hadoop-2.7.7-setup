@@ -4,13 +4,13 @@
 
 ## 1 设备要求
 
-###### 1.1 操作系统
+### 1.1 操作系统
 
 •	本地 - Windows 10
 
 •	虚拟机 - Ubuntu 16.04 
 
-###### 1.2 软件
+### 1.2 软件
 
 •	Java 1.8.0_201
 
@@ -19,7 +19,7 @@
 
 ## 2 本地文件系统的环境部署
 
-###### 2.1 创建组及用户
+### 2.1 创建组及用户
 
 •	切换为 root 用户：
 
@@ -33,7 +33,7 @@
 
 `$ adduser --ingroup hadoop hadoop`
 
-###### 2.2 更改权限
+### 2.2 更改权限
 
 •	在 /opt/ 目录下创建 hadoop 文件夹：
 
@@ -49,7 +49,7 @@ $ chmod -R 700 /opt/hadoop
 
 `$ su Hadoop`
 
-###### 2.3 安装 Java
+### 2.3 安装 Java
 
 因为 Hadoop 分布式文件系统是用 Java 语言编写的，所以要先安装 jdk。安装方法分为离线和在线两种方法，离线方法采用压缩包安装，在线方法使用 apt-get 命令安装。
 
@@ -89,7 +89,7 @@ $ apt install –y oracle-java8-installer
 
 `$ java –version`
 
-###### 2.4 设置机器名称 
+### 2.4 设置机器名称 
 
 • 在 /etc/hostname 文件中更改机器名称：
 
@@ -99,7 +99,7 @@ $ apt install –y oracle-java8-installer
 
 `xxx.xxx.xxx.xxx       master`
 
-###### 2.5 设置 ssh 免密登陆
+### 2.5 设置 ssh 免密登陆
 
 ```
 $ ssh-keygen -t rsa -P '' -f ~/.ssh/id_rsa
@@ -109,7 +109,7 @@ $ chmod 0600 ~/.ssh/authorized_keys
 
 ## 3 单机模式的配置和运行
 
-###### 3.1 下载 hadoop 2.7.7 版
+### 3.1 下载 hadoop 2.7.7 版
 
 •	用 wget 命令下载 Hadoop 的镜像文件并解压缩：
 
@@ -140,7 +140,7 @@ export CLASSPATH=$CLASSPATH:/usr/local/hadoop/lib/*:.
 export HADOOP_OPTS="$HADOOP_OPTS -Djava.security.egd=file:/dev/../dev/urandom"
 ```
 
-###### 3.2 运行非分布单机模式
+### 3.2 运行非分布单机模式
 
 ```
 $ mkdir input
@@ -152,7 +152,7 @@ $ cat output/*
 
 ## 4 伪分布式的配置和运行
 
-###### 4.1 属性配置
+### 4.1 属性配置
 
 •	修改 $HADOOP_HOME/etc/hadoop 目录下的 core-site.xml 文件：
 
@@ -165,10 +165,10 @@ $ cat output/*
     <property>
         <name>fs.defaultFS</name>
         <value>hdfs://localhost:9000</value>
-</property>
-<property>
-    <name>io.file.buffer.size</name>
-    	   <value>131072</value>
+    </property>
+    <property>
+        <name>io.file.buffer.size</name>
+    	<value>131072</value>
     </property>
 </configuration>
 ```
@@ -188,11 +188,11 @@ $ cat output/*
     <property>
         <name>dfs.datanode.data.dir</name>
         <value>file:$HADOOP_HOME/tmp/dfs/data</value>
-</property>
-<property>
+    </property>
+    <property>
  	   <name>dfs.block.size</name>
    	   <value>268435456</value>
-</property>
+    </property>
     <property>
         <name>dfs.namenode.handler.count</name>
         <value>100</value>
@@ -200,7 +200,7 @@ $ cat output/*
 </configuration>
 ```
 
-###### 4.2 运行伪分布式模式
+### 4.2 运行伪分布式模式
 
 （1）格式化文件系统：
 
@@ -249,7 +249,7 @@ $ cat output/*
 
 ## 5 YARN模式的配置和运行
 
-###### 5.1 属性配置
+### 5.1 属性配置
 
 •	将 $HADOOP_HOME/etc/hadoop/ 下的 mapred-site.xml.template 复制粘贴到 mapred-site.xml：
 
@@ -262,50 +262,50 @@ $ cp mapred-site.xml.template mapred-site.xml
 
 ```xml
 <configuration>
-<property>
+    <property>
         <name>mapreduce.framework.name</name>
         <value>yarn</value>
-</property>
-<property>
-   	   <name>mapreduce.map.memory.mb</name>
-   	   <value>1536</value>
-</property>
-<property>
-         <name>mapreduce.map.java.opts</name>
+    </property>
+    <property>
+        <name>mapreduce.map.memory.mb</name>
+   	    <value>1536</value>
+    </property>
+    <property>
+        <name>mapreduce.map.java.opts</name>
    	    <value>-Xmx1024M</value>
-</property>
-<property>
- 	   <name>mapreduce.reduce.memory.mb</name>
-   	   <value>3072</value>
-</property>
-<property>
-    	   <name>mapreduce.reduce.java.opts</name>
-         <value>-Xmx2560M</value>
-</property>
-<property>
-    	   <name>mapreduce.task.io.sort.mb</name>
-         <value>512</value>
-</property>
-<property>
-<name>mapreduce.task.io.sort.factor</name>
-         <value>100</value>
-</property>
-<property>
-         <name>mapreduce.jobhistory.address</name>
-         <value>master:10020</value>
-</property>
-<property>
-         <name>mapreduce.jobhistory.webapp.address</name>
-         <value>master:19888</value>
-</property>
-<property>
-         <name>yarn.app.mapreduce.am.staging-dir</name>
-         <value>/user/app</value>
-</property>
-<property>
-         <name>mapred.child.java.opts</name>
-         <value>-Djava.security.egd=file:/dev/../dev/urandom</value>
-</property>
+    </property>
+    <property>
+        <name>mapreduce.reduce.memory.mb</name>
+   	    <value>3072</value>
+    </property>
+    <property>
+        <name>mapreduce.reduce.java.opts</name>
+        <value>-Xmx2560M</value>
+    </property>
+    <property>
+    	<name>mapreduce.task.io.sort.mb</name>
+        <value>512</value>
+    </property>
+    <property>
+        <name>mapreduce.task.io.sort.factor</name>
+        <value>100</value>
+    </property>
+    <property>
+        <name>mapreduce.jobhistory.address</name>
+        <value>master:10020</value>
+    </property>
+    <property>
+        <name>mapreduce.jobhistory.webapp.address</name>
+        <value>master:19888</value>
+    </property>
+    <property>
+        <name>yarn.app.mapreduce.am.staging-dir</name>
+        <value>/user/app</value>
+    </property>
+    <property>
+        <name>mapred.child.java.opts</name>
+        <value>-Djava.security.egd=file:/dev/../dev/urandom</value>
+    </property>
 </configuration>
 ```
 
@@ -316,43 +316,43 @@ $ cp mapred-site.xml.template mapred-site.xml
     <property>
         <name>yarn.nodemanager.aux-services</name>
         <value>mapreduce_shuffle</value>
-</property>
-<property>
-<name>yarn.resourcemanager.hostname</name>
+    </property>
+    <property>
+        <name>yarn.resourcemanager.hostname</name>
         <value>master</value>
-</property>
-<property>
+    </property>
+    <property>
         <name>yarn.resourcemanager.bind-host</name>
         <value>0.0.0.0</value>
-</property>
-<property>
+    </property>
+    <property>
         <name>yarn.nodemanager.bind-host</name>
         <value>0.0.0.0</value>
-</property>
-<property>
+    </property>
+    <property>
         <name>yarn.nodemanager.aux-services.mapreduce_shuffle.class</name>
-<value>org.apache.hadoop.mapred.ShuffleHandler</value>
-</property>
-<property>
+        <value>org.apache.hadoop.mapred.ShuffleHandler</value>
+    </property>
+    <property>
         <name>yarn.log-aggregation-enable</name>
-    	   <value>true</value>
-</property>
-<property>
+        <value>true</value>
+    </property>
+    <property>
         <name>yarn.nodemanager.local-dirs</name>
         <value>file:/opt/hadoop/hadoop-2.7.7/tmp/yarn/local</value>
-</property>
-<property>
+    </property>
+    <property>
         <name>yarn.nodemanager.log-dirs</name>
         <value>file:/opt/hadoop/hadoop-2.7.7/tmp/yarn/log</value>
-</property>
-<property>
+    </property>
+    <property>
         <name>yarn.nodemanager.remote-app-log-dir</name>
-    	   <value>hdfs://master:8020/var/log/hadoop-yarn/apps</value>
-</property>
+        <value>hdfs://master:8020/var/log/hadoop-yarn/apps</value>
+    </property>
 </configuration>
 ```
 
-###### 5.2 运行 YARN
+### 5.2 运行 YARN
 
 （1）运行 ResourceManager 进程和 NodeManager 进程：
 
@@ -371,7 +371,7 @@ $ cp mapred-site.xml.template mapred-site.xml
 
 ## 6 完全分布式的配置和运行
 
-###### 6.1 集群的环境部署
+### 6.1 集群的环境部署
 
 • 在每台子机上重复上述第 3 节中的五个步骤
 
@@ -398,7 +398,7 @@ $ scp –r hadoop-2.7.7 worker1:/opt/hadoop
 $ scp –r hadoop-2.7.7 worker2:/opt/hadoop
 ```
 
-###### 6.2 运行完全分布式
+### 6.2 运行完全分布式
 
 （1）在主机上格式化文件系统：
 
