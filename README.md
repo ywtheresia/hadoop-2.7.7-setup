@@ -2,24 +2,24 @@
 部署基于 Hadoop 2.7.7 版本的计算机集群。
 
 
-1 设备要求
+## 1 设备要求
 
-1.1 操作系统
+###### 1.1 操作系统
 
 •	本地 - Windows 10
 
 •	虚拟机 - Ubuntu 16.04 
 
-1.2 软件
+###### 1.2 软件
 
 •	Java 1.8.0_201
 
 •	ssh server
 
 
-2 本地文件系统的环境部署
+## 2 本地文件系统的环境部署
 
-2.1 创建组及用户
+###### 2.1 创建组及用户
 
 •	切换为 root 用户：
 
@@ -33,7 +33,7 @@
 
 `$ adduser --ingroup hadoop hadoop`
 
-2.2 更改权限
+###### 2.2 更改权限
 
 •	在 /opt/ 目录下创建 hadoop 文件夹：
 
@@ -49,7 +49,7 @@ $ chmod -R 700 /opt/hadoop
 
 `$ su Hadoop`
 
-2.3 安装 Java
+###### 2.3 安装 Java
 
 因为 Hadoop 分布式文件系统是用 Java 语言编写的，所以要先安装 jdk。安装方法分为离线和在线两种方法，离线方法采用压缩包安装，在线方法使用 apt-get 命令安装。
 
@@ -62,7 +62,7 @@ $ mv jdk-8u201-linux-x64/* /usr/lib/jvm/java-8-oracle
 ```
 
 •	在 ~/.bashrc 文件中添加 Java环境变量并保存：
-```
+```shell
 export JAVA_HOME=/usr/lib/jvm/java-8-oracle
 export CLASSPATH=.:$JAVA_HOME/lib:$JAVA_HOME/jre/lib
 export PATH=.:$JAVA_HOME/bin:$PATH
@@ -89,7 +89,7 @@ $ apt install –y oracle-java8-installer
 
 `$ java –version`
 
-2.4 设置机器名称 
+###### 2.4 设置机器名称 
 
 • 在 /etc/hostname 文件中更改机器名称：
 
@@ -99,7 +99,7 @@ $ apt install –y oracle-java8-installer
 
 `xxx.xxx.xxx.xxx       master`
 
-2.5 设置 ssh 免密登陆
+###### 2.5 设置 ssh 免密登陆
 
 ```
 $ ssh-keygen -t rsa -P '' -f ~/.ssh/id_rsa
@@ -107,9 +107,9 @@ $ cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
 $ chmod 0600 ~/.ssh/authorized_keys
 ```
 
-3 单机模式的配置和运行
+## 3 单机模式的配置和运行
 
-3.1 下载 hadoop 2.7.7 版
+###### 3.1 下载 hadoop 2.7.7 版
 
 •	用 wget 命令下载 Hadoop 的镜像文件并解压缩：
 
@@ -124,7 +124,7 @@ $ tar –xzvf Hadoop-2.7.7.tar.gz
 
 •	在 HADOOP_HOME/etc/hadoop/ 目录下的 hadoop-env.sh 文件中修改 java 参数和 hadoop 参数，并保存文件：
 
-```
+```shell
 export JAVA_HOME=/usr/lib/jvm/java-8-oracle/jre
 export PATH=$PATH:$JAVA_HOME/bin
 export HADOOP_HOME=/opt/hadoop/hadoop-2.7.7
@@ -140,7 +140,7 @@ export CLASSPATH=$CLASSPATH:/usr/local/hadoop/lib/*:.
 export HADOOP_OPTS="$HADOOP_OPTS -Djava.security.egd=file:/dev/../dev/urandom"
 ```
 
-3.2 运行非分布单机模式
+###### 3.2 运行非分布单机模式
 
 ```
 $ mkdir input
@@ -150,13 +150,13 @@ $ cat output/*
 ```
 
 
-4 伪分布式的配置和运行
+## 4 伪分布式的配置和运行
 
-4.1 属性配置
+###### 4.1 属性配置
 
 •	修改 $HADOOP_HOME/etc/hadoop 目录下的 core-site.xml 文件：
 
-```
+```xml
 <configuration>
     <property>
         <name>hadoop.tmp.dir</name>
@@ -175,7 +175,7 @@ $ cat output/*
 
 •	修改 $HADOOP_HOME/etc/hadoop 目录下的 hdfs-site.xml 文件：
 
-```
+```xml
 <configuration>
     <property>
         <name>dfs.replication</name>
@@ -200,7 +200,7 @@ $ cat output/*
 </configuration>
 ```
 
-4.2 运行伪分布式模式
+###### 4.2 运行伪分布式模式
 
 （1）格式化文件系统：
 
@@ -247,9 +247,9 @@ $ cat output/*
 `$ sbin/stop-dfs.sh`
 
 
-5 YARN模式的配置和运行
+## 5 YARN模式的配置和运行
 
-5.1 属性配置
+###### 5.1 属性配置
 
 •	将 $HADOOP_HOME/etc/hadoop/ 下的 mapred-site.xml.template 复制粘贴到 mapred-site.xml：
 
@@ -260,7 +260,7 @@ $ cp mapred-site.xml.template mapred-site.xml
 
 •	修改 $HADOOP_HOME/etc/hadoop 目录下的 mapred-site.xml 文件：
 
-```
+```xml
 <configuration>
 <property>
         <name>mapreduce.framework.name</name>
@@ -311,7 +311,7 @@ $ cp mapred-site.xml.template mapred-site.xml
 
 •	修改 $HADOOP_HOME/etc/hadoop 目录下的 yarn-site.xml 文件：
 
-```
+```xml
 <configuration>
     <property>
         <name>yarn.nodemanager.aux-services</name>
@@ -352,7 +352,7 @@ $ cp mapred-site.xml.template mapred-site.xml
 </configuration>
 ```
 
-5.2 运行 YARN
+###### 5.2 运行 YARN
 
 （1）运行 ResourceManager 进程和 NodeManager 进程：
 
@@ -369,9 +369,9 @@ $ cp mapred-site.xml.template mapred-site.xml
 `$ sbin/stop-yarn.sh`
 
 
-6 完全分布式的配置和运行
+## 6 完全分布式的配置和运行
 
-6.1 集群的环境部署
+###### 6.1 集群的环境部署
 
 • 在每台子机上重复上述第 3 节中的五个步骤
 
@@ -379,14 +379,14 @@ $ cp mapred-site.xml.template mapred-site.xml
 
 • 将子机的 IP 地址和名称添加到主机的 /etc/hosts 文件中
 
-```
+```shell
 xxx.xxx.xxx.xxx       worker1
 xxx.xxx.xxx.xxx       worker2
 ```
 
 • 将子机的名称写入主机的 $HADOOP_HOME/etc/hadoop/slaves 文件中
 
-```
+```shell
 worker1
 worker2
 ```
@@ -398,7 +398,7 @@ $ scp –r hadoop-2.7.7 worker1:/opt/hadoop
 $ scp –r hadoop-2.7.7 worker2:/opt/hadoop
 ```
 
-6.2 运行完全分布式
+###### 6.2 运行完全分布式
 
 （1）在主机上格式化文件系统：
 
@@ -410,7 +410,7 @@ $ scp –r hadoop-2.7.7 worker2:/opt/hadoop
 
 （3）用 jps 命令在各台机器上查看状态：
 
-```
+```shell
 master：NameNode, SecondaryNamenode
 worker1：DataNode
 worker2：DataNode
