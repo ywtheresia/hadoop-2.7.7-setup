@@ -1,4 +1,4 @@
-# hadoop-2.7.7-master
+# hadoop-2.7.7-setup
 部署基于 Hadoop 2.7.7 版本的计算机集群。
 
 
